@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      precision mediump float;
+      
+      attribute vec4 vPosition;
+      attribute vec4 vColor;
+
+      varying vec4 fColor;
+      varying lowp vec4 vPos;
+
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      uniform float timet;
+
+      void main() {
+        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+        vPos = gl_Position;
+        fColor = vColor;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      
+      varying lowp vec4 vPos;
+      varying vec4 fColor;
+
+      uniform float timet;
+      
+      void main() {
+        float sigmoid = 1.0 / (1.0 + exp(-0.2 * vPos.z));
+        vec4 fColor = fColor * sigmoid * 0.8 / 255.0 + 0.1;
+        gl_FragColor = vec4(fColor.r, fColor.g, fColor.b, 1.0);
+      }
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <script type="text/javascript" src="insect.js"></script>
+  </head>
+  <body>
+    <canvas id="gl-canvas" width="600" height="600" name="canvas">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    
+    </div>
+    <div id="UISliders" class="UIBoxRed">
+      <div id="UISlidersHeader">Sliders</div>
+      <div class="break5"></div>
+
+      <div class="partsBox">
+        <div class="titledDiv">
+          <h1><span>Body</span></h1>
+          <div class="box">
+            <div class="textDiv">
+              Head:
+            </div>
+            <input type="text" id="headText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              -30
+              <input id="sliderHead" type="range" min="-30" max="30" step="2" value="0" />
+              30&nbsp&nbsp
+            </div>
+          </div>
+          <div class="box">
+            <div class="textDiv">
+              Body:
+            </div>
+            <input type="text" id="bodyText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              -180
+              <input id="sliderBody" type="range" min="-180" max="180" step="5" value="0" />
+              180
+            </div>
+          </div>
+          <div class="box">
+            <div class="textDiv">
+              Rear:
+            </div>
+            <input type="text" id="rearText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              -30
+              <input id="sliderRear" type="range" min="-30" max="30" step="2" value="0" />
+              30&nbsp&nbsp
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="partsBox">
+        <div class="titledBox">
+          <h1><span>Left Legs</span></h1>
+          <div class="break15"></div>
+          <div class="titledDiv">
+            <h1><span>Front</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="LFUText" class="sliderValues" value="0" disabled> 
+              <div class="numberDiv">
+                -60
+                <input id="sliderLFU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="LFLText" class="sliderValues" value="0" disabled> 
+              <div class="numberDiv">
+                -60
+                <input id="sliderLFL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Center</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="LCUText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderLCU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="LCLText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderLCL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Back</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="LBUText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderLBU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="LBLText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderLBL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="titledBox">
+          <h1><span>Right Legs</span></h1>
+          <div class="break15"></div>
+          <div class="titledDiv">
+            <h1><span>Front</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="RFUText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRFU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="RFLText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRFL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Center</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="RCUText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRCU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="RCLText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRCL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Back</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <input type="text" id="RBUText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRBU" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <input type="text" id="RBLText" class="sliderValues" value="0" disabled>
+              <div class="numberDiv">
+                -60
+                <input id="sliderRBL" type="range" min="-60" max="30" step="2" value="0" />
+                30
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="partsBox">
+        <div class="titledDiv">
+          <h1><span>Translate</span></h1>
+          <div class="box">
+            <div class="textDiv">
+              Translate X:
+            </div>
+            <input type="text" id="XText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              -6
+              <input id="sliderX" type="range" min="-6" max="6" step="0.1" value="0" />
+              6
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="box">
+            <div class="textDiv">
+              Translate Y:
+            </div>
+            <input type="text" id="YText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              0
+              <input id="sliderY" type="range" min="0" max="8" step="0.1" value="0" />
+              8
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="box">
+            <div class="textDiv">
+              Translate Z:
+            </div>
+            <input type="text" id="ZText" class="sliderValues" value="0" disabled>
+            <div class="numberDiv">
+              -6
+              <input id="sliderZ" type="range" min="-6" max="6" step="0.1" value="0" />
+              6
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
