@@ -35,15 +35,21 @@ var leftCenterUpperLegId = 5;
 var leftCenterLowerLegId = 6;
 var leftBackUpperLegId = 7;
 var leftBackLowerLegId = 8;
-var rightFrontUpperLegId = 9;
-var rightFrontLowerLegId = 10;
-var rightCenterUpperLegId = 11;
-var rightCenterLowerLegId = 12;
-var rightBackUpperLegId = 13;
-var rightBackLowerLegId = 14;
+var leftLastUpperLegId = 9;
+var leftLastLowerLegId = 10;
+
+var rightFrontUpperLegId = 11;
+var rightFrontLowerLegId = 12;
+var rightCenterUpperLegId = 13;
+var rightCenterLowerLegId = 14;
+var rightBackUpperLegId = 15;
+var rightBackLowerLegId = 16;
+var rightLastUpperLegId = 17;
+var rightLastLowerLegId = 18;
+
 
 // Numver of total body parts (nodes)
-var numNodes = 15; 
+var numNodes = 19; 
 
 // Constant height and width values of nodes
 const BODY_HEIGHT = 1.6;
@@ -84,92 +90,6 @@ var timet;
 var timetLoc;
 var interpolationFrame = 0;
 
-/***************************************************
-  Prepared animation frames
-****************************************************/
-function animationFrames() {
-  defaultThetaList = [
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60], //0,0,0
-    [105, 0, 0, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50],
-    [105, 0, 0, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-  ];
-
-  defaultTransList = [
-    [18, 1, 0],
-    [16, 1, 0],
-    [14, 1, 0],
-    [12, 1, 0],
-    [10, 1, 0],
-    [8, 1, 0],
-    [6, 1, 0],
-    [4, 1, 0],
-    [2, 1, 0],
-    [0, 1, 0],
-    [-2, 1, 0],
-    [-4, 1, 0],
-    [-6, 1, 0],
-    [-8, 1, 0],
-    [-10, 1, 0],
-    [-12, 1, 0],
-    [-14, 1, 0],
-    [-16, 1, 0],
-    [-18, 1, 0],
-    [-18, 1, 0],
-    [-16, 1, 0],
-    [-14, 1, 0],
-    [-12, 1, 0],
-    [-10, 1, 0],
-    [-8, 1, 0],
-    [-6, 1, 0],
-    [-4, 1, 0],
-    [-2, 1, 0],
-    [0, 0, 0],
-    [2, 2, 0],
-    [4, 4, 0],
-    [6, 6, 0],
-    [8, 8, 0],
-    [10, 10, 0],
-    [12, 12, 0],
-    [14, 14, 0],
-    [16, 16, 0],
-    [18, 18, 0],
-  ]
-}
 
 /***************************************************
   Init function of window
@@ -182,10 +102,6 @@ window.onload = function init() {
   // Load shaders and initialize attribute buffers
   program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
-
-  // Draggable UI Elements
-  // dragElement(document.getElementById("UIButtons"));
-  dragElement(document.getElementById("UISliders"));
 
   // Configure WebGL
   gl.viewport(0, 0, canvas.width, canvas.width);
@@ -250,6 +166,7 @@ function render() {
     curTranslateZ = transList[curFrame][2] * (1 - timet) + transList[nextFrame][2] * timet;
     updateNodes(bodyId);
   } 
+  
   else if(isPlayingDefaultAnim) {
     if (timet < 1) {
       timet += 0.04;  // Speed of animation
@@ -346,25 +263,36 @@ function updateNodes(id) {
       break;
 
     case leftCenterUpperLegId:
-      m = translate(0.0, 0.0, -1.8);
+      m = translate(0.0, 0.2, -1.8);
       m = mult(m, rotate(90, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftCenterUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-90, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.0, 1.8));
+      m = mult(m, translate(0.0, 0.2, 1.8));
       figure[leftCenterUpperLegId] = createNode(m, leftCenterUpperLeg, leftBackUpperLegId, leftCenterLowerLegId);
       break;
 
     case leftBackUpperLegId:
-      m = translate(0.0, -0.8, -1.8);
+      m = translate(0.0, -0.2, -1.8);
       m = mult(m, rotate(60, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftBackUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-60, 1, 0, 0));
+      m = mult(m, translate(0.0, -0.2, 1.8));
+      figure[leftBackUpperLegId] = createNode(m, leftBackUpperLeg, leftLastUpperLegId, leftBackLowerLegId);
+      break;
+
+    case leftLastUpperLegId:
+      m = translate(0.0, -0.8, -1.8);
+      m = mult(m, rotate(30, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[leftLastUpperLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-30, 1, 0, 0));
       m = mult(m, translate(0.0, 0.8, 1.8));
-      figure[leftBackUpperLegId] = createNode(m, leftBackUpperLeg, rightFrontUpperLegId, leftBackLowerLegId);
+      figure[leftLastUpperLegId] = createNode(m, leftLastUpperLeg, rightFrontUpperLegId, leftLastLowerLegId);
       break;
 
     case rightFrontUpperLegId:
@@ -379,25 +307,36 @@ function updateNodes(id) {
       break;
 
     case rightCenterUpperLegId:
-      m = translate(0.0, 0.0, 1.8);
+      m = translate(0.0, 0.2, 1.8);
       m = mult(m, rotate(-90, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightCenterUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(90, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.0, -1.8));
+      m = mult(m, translate(0.0, -0.2, -1.8));
       figure[rightCenterUpperLegId] = createNode(m, rightCenterUpperLeg, rightBackUpperLegId, rightCenterLowerLegId);
       break;
 
     case rightBackUpperLegId:
-      m = translate(0.0, -0.8, 1.8);
+      m = translate(0.0, -0.2, 1.8);
       m = mult(m, rotate(-60, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightBackUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(60, 1, 0, 0));
+      m = mult(m, translate(0.0, 0.2, -1.8));
+      figure[rightBackUpperLegId] = createNode(m, rightBackUpperLeg, rightLastUpperLegId, rightBackLowerLegId);
+      break;
+
+    case rightLastUpperLegId:
+      m = translate(0.0, -0.8, 1.8);
+      m = mult(m, rotate(-30, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[rightLastUpperLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(30, 1, 0, 0));
       m = mult(m, translate(0.0, 0.8, -1.8));
-      figure[rightBackUpperLegId] = createNode(m, rightBackUpperLeg, null, rightBackLowerLegId);
+      figure[rightLastUpperLegId] = createNode(m, rightLastUpperLeg, null, rightLastLowerLegId);
       break;
 
     case leftFrontLowerLegId:
@@ -412,25 +351,36 @@ function updateNodes(id) {
       break;
 
     case leftCenterLowerLegId:
-      m = translate(-0.55, 0.0, -4.55);
+      m = translate(-0.45, -0.7, -4.55);
       m = mult(m, rotate(90, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftCenterLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-90, 1, 0, 0));
-      m = mult(m, translate(0.55, 0.0, 4.55));
+      m = mult(m, translate(0.55, -1.1, 4.35));
       figure[leftCenterLowerLegId] = createNode(m, leftCenterLowerLeg, null, null);
       break;
 
     case leftBackLowerLegId:
-      m = translate(-0.55, -2.2, -4.2);
+      m = translate(-0.50, -1.0, -4.50);
       m = mult(m, rotate(60, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftBackLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-60, 1, 0, 0));
-      m = mult(m, translate(0.55, 2.2, 4.2));
+      m = mult(m, translate(0.55, 1.1, 4.45));
       figure[leftBackLowerLegId] = createNode(m, leftBackLowerLeg, null, null);
+      break;
+    
+    case leftLastLowerLegId:
+      m = translate(-0.55, -2.2, -4.2);
+      m = mult(m, rotate(30, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[leftLastLowerLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-30, 1, 0, 0));
+      m = mult(m, translate(0.55, 2.2, 4.2));
+      figure[leftLastLowerLegId] = createNode(m, leftLastLowerLeg, null, null);
       break;
 
     case rightFrontLowerLegId:
@@ -445,25 +395,36 @@ function updateNodes(id) {
       break;
 
     case rightCenterLowerLegId:
-      m = translate(-0.55, 0.0, 4.55);
+      m = translate(-0.55, 1.1, 4.35);
       m = mult(m, rotate(-90, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightCenterLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(90, 1, 0, 0));
-      m = mult(m, translate(0.55, 0.0, -4.55));
+      m = mult(m, translate(0.55, -1.1, -4.45));
       figure[rightCenterLowerLegId] = createNode(m, rightCenterLowerLeg, null, null);
       break;
 
     case rightBackLowerLegId:
-      m = translate(-0.55, -2.2, 4.2);
+      m = translate(-0.55, -1.1, 4.45);
       m = mult(m, rotate(-60, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightBackLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(60, 1, 0, 0));
-      m = mult(m, translate(0.55, 2.2, -4.2));
+      m = mult(m, translate(0.55, 1.1, -4.35));
       figure[rightBackLowerLegId] = createNode(m, rightBackLowerLeg, null, null);
+      break;
+    
+    case rightLastLowerLegId:
+      m = translate(-0.55, -2.2, 4.2);
+      m = mult(m, rotate(-60, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[rightLastLowerLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(60, 1, 0, 0));
+      m = mult(m, translate(0.55, 2.2, -4.2));
+      figure[rightLastLowerLegId] = createNode(m, rightLastLowerLeg, null, null);
       break;
   }
 }
@@ -524,7 +485,7 @@ function leftFrontUpperLeg() {
 }
 
 function leftCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, -1.8));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.2, -1.8));
   instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
@@ -535,8 +496,19 @@ function leftCenterUpperLeg() {
 }
 
 function leftBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, -1.8));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.2, -1.8));
   instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_LEG_COLOR);
+}
+
+function leftLastUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -557,7 +529,7 @@ function rightFrontUpperLeg() {
 }
 
 function rightCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.8));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.2, 1.8));
   instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
@@ -568,8 +540,19 @@ function rightCenterUpperLeg() {
 }
 
 function rightBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, 1.8));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.2, 1.8));
   instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_LEG_COLOR);
+}
+
+function rightLastUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-30, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -589,8 +572,19 @@ function leftFrontLowerLeg() {
   drawBodyPart(FRONT_LEG_COLOR);
 }
 
+// function leftCenterUpperLeg() {
+//   instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.2, -1.8));
+//   instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+//   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+//   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+//   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+//   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+//   drawBodyPart(CENTER_LEG_COLOR);
+// }
+
 function leftCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, -4.55));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 2.0, -4.45));
   instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
@@ -601,8 +595,19 @@ function leftCenterLowerLeg() {
 }
 
 function leftBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, -4.2));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -1.1, -4.35));
   instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_LEG_COLOR);
+}
+
+function leftLastLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, -4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -623,7 +628,7 @@ function rightFrontLowerLeg() {
 }
 
 function rightCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, 4.55));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, 4.35));
   instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
@@ -634,7 +639,7 @@ function rightCenterLowerLeg() {
 }
 
 function rightBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.2));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.45));
   instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
@@ -643,6 +648,19 @@ function rightBackLowerLeg() {
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
   drawBodyPart(BACK_LEG_COLOR);
 }
+
+function rightLastLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(-30, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_LEG_COLOR);
+}
+
+
 
 /***************************************************
   Draws body parts of figure (with using cubes)  
@@ -892,53 +910,4 @@ function processBuffers(color, vertices, vSize) {
   var vPosition = gl.getAttribLocation(program, "vPosition");
   gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
-}
-
-/*******************************************************************
-  Draggable UI Elements (Not modified)
-
-  Taken from https://www.w3schools.com/howto/howto_js_draggable.asp
-********************************************************************/
-function dragElement(elmnt) {
-  var pos1 = 0,
-    pos2 = 0,
-    pos3 = 0,
-    pos4 = 0;
-  if (document.getElementById(elmnt.id + "Header")) {
-    // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "Header").onmousedown = dragMouseDown;
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
 }
