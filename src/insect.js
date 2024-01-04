@@ -53,21 +53,25 @@ var numNodes = 19;
 
 // Constant height and width values of nodes
 const BODY_HEIGHT = 1.6;
-const BODY_WIDTH = 1.2;
-const HEAD_HEIGHT = 1.6;
-const HEAD_WIDTH = 1.8;
-const REAR_HEIGHT = 2.2;
-const REAR_WIDTH = 2.2;
-const LEG_HEIGHT = 3.0;
+const BODY_WIDTH = 5.0;
+const BODY_LENGTH = 5.0;
+const HEAD_HEIGHT = 2;
+const HEAD_WIDTH = 2;
+const HEAD_LENGTH = 2;
+// const REAR_HEIGHT = 1.6;
+// const REAR_WIDTH = 5.0;
+// const REAR_LENGTH = 5.0;
+const LEG_HEIGHT = 5.0;
 const LEG_WIDTH = 0.3;
+const LEG_LENGTH = 0.3;
 
 // Constant color values for each body part
-const BODY_COLOR = vec4(129, 81, 55, 255);
-const HEAD_COLOR = vec4(100, 60, 15, 255);
-const REAR_COLOR = vec4(61, 28, 11, 255);
-const FRONT_LEG_COLOR = vec4(104, 36, 4, 255);
-const CENTER_LEG_COLOR = vec4(128, 64, 4, 255);
-const BACK_LEG_COLOR = vec4(89, 24, 21, 255);
+const BODY_COLOR = vec4(221, 53, 42, 255);
+const HEAD_COLOR = vec4(234, 115, 108, 255);
+const REAR_COLOR = vec4(185, 51, 42, 255);
+const FRONT_LEG_COLOR = vec4(239, 179, 175, 255);
+const CENTER_LEG_COLOR = vec4(239, 179, 175, 255);
+const BACK_LEG_COLOR = vec4(239, 179, 175, 255);
 
 var curTranslateX;
 var curTranslateY;
@@ -229,6 +233,7 @@ function updateNodes(id) {
   var m = mat4();
 
   switch (id) {
+    
     case bodyId:
       m = translate(-curTranslateX, curTranslateY, curTranslateZ);
       m = mult(m, rotate(curTheta[bodyId], 0, 1, 0));
@@ -241,18 +246,18 @@ function updateNodes(id) {
       m = translate(0.0, 0.8 * BODY_HEIGHT, 0.0);
       m = mult(m, rotate(curTheta[headId], 0, 0, 1));
       m = mult(m, translate(0.0, -0.8 * BODY_HEIGHT, 0.0));
-      figure[headId] = createNode(m, head, rearId, null);
+      figure[headId] = createNode(m, head, leftFrontUpperLegId, null);
       break;
 
-    case rearId:
-      m = translate(-0.2, -BODY_HEIGHT, 0.0);
-      m = mult(m, rotate(curTheta[rearId], 0, 0, 1));
-      m = mult(m, translate(0.2, BODY_HEIGHT, 0.0));
-      figure[rearId] = createNode(m, rear, leftFrontUpperLegId, null);
-      break;
+    // case rearId:
+    //   m = translate(-0.2, -BODY_HEIGHT, 0.0);
+    //   m = mult(m, rotate(curTheta[rearId], 0, 0, 1));
+    //   m = mult(m, translate(0.2, BODY_HEIGHT, 0.0));
+    //   figure[rearId] = createNode(m, rear, leftFrontUpperLegId, null);
+    //   break;
 
     case leftFrontUpperLegId:
-      m = translate(0.0, 0.8, -1.8);
+      m = translate(0.0, 0.8, -4.0); // x,z,y
       m = mult(m, rotate(120, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftFrontUpperLegId], 0, 0, 1));
@@ -340,7 +345,7 @@ function updateNodes(id) {
       break;
 
     case leftFrontLowerLegId:
-      m = translate(-0.55, 2.2, -4.2);
+      m = translate(-0.8, 3.2, -6.0);
       m = mult(m, rotate(120, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftFrontLowerLegId], 0, 0, 1));
@@ -384,7 +389,7 @@ function updateNodes(id) {
       break;
 
     case rightFrontLowerLegId:
-      m = translate(-0.55, 2.2, 4.2);
+      m = translate(-0.8, 3.2, 6.0);
       m = mult(m, rotate(-120, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightFrontLowerLegId], 0, 0, 1));
@@ -454,21 +459,21 @@ function traverse(id) {
 ****************************************************/
 
 function body() {
-  instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
+  instanceMatrix = mult(modelViewMatrix, scale4(BODY_HEIGHT, BODY_LENGTH, BODY_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
   drawBodyPart(BODY_COLOR);
 }
 
 function head() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8 * BODY_HEIGHT, 0.0));
-  instanceMatrix = mult(instanceMatrix, scale4(HEAD_WIDTH, HEAD_HEIGHT, HEAD_WIDTH));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 2.0* BODY_HEIGHT, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(HEAD_HEIGHT, HEAD_LENGTH, HEAD_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
   drawBodyPart(HEAD_COLOR);
 }
 
 function rear() {
   instanceMatrix = mult(modelViewMatrix, translate(-0.2, -BODY_HEIGHT, 0.0));
-  instanceMatrix = mult(instanceMatrix, scale4(REAR_WIDTH, REAR_HEIGHT, REAR_WIDTH));
+  instanceMatrix = mult(instanceMatrix, scale4(REAR_HEIGHT, REAR_LENGTH, REAR_WIDTH)); //height, length, width
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
   drawBodyPart(REAR_COLOR);
 }
@@ -717,12 +722,12 @@ function sliders() {
     updateNodes(headId);
   };
 
-  document.getElementById("sliderRear").oninput = function() {
-    var sliderValue = event.srcElement.value; 
-    document.getElementById("rearText").value = sliderValue;
-    theta[rearId] = sliderValue;
-    updateNodes(rearId);
-  };
+  // document.getElementById("sliderRear").oninput = function() {
+  //   var sliderValue = event.srcElement.value; 
+  //   document.getElementById("rearText").value = sliderValue;
+  //   theta[rearId] = sliderValue;
+  //   updateNodes(rearId);
+  // };
 
   document.getElementById("sliderLFU").oninput = function() {
     var sliderValue = event.srcElement.value; 
