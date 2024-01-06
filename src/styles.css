@@ -7,15 +7,46 @@
     outline: none;
 }
 
-.UIBoxBlue {
+
+/* Style for the yellow UI box */
+.UIBoxYellow {
   border-radius: 25px;
-  background-color: #5fb7ff;
-  box-shadow: -8px 8px 8px #2121214d;
-  border:none;
-  display: flex;
-  justify-content: space-between;
-  align-items: space-between;
-  flex-direction: column;
+  background-color:#FDDD5C;
+  position:absolute;
+  top:10px;
+  left:700px;
+  padding: 40px;
+  margin: 10px;
+  width: 400px;
+}
+
+#UISlidersHeader{
+  text-align: center;
+}
+
+/* Style for the sliders container */
+#lightMenu {
+  margin-top: 20px;
+}
+
+/* Style for slider labels */
+.sliderLabel {
+  margin-bottom: 10px;
+  display: inline-block; /* Display labels inline */
+  text-align: left;
+  width: 45%; /* Adjust the width of labels */
+}
+
+.slideBar {
+  width: 100%; /* Adjust the width of the sliders */
+  display: inline-block; /* Display sliders inline */
+}
+
+/* Clear the float for each label to ensure proper stacking */
+.sliderLabel::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .UIBoxRed {
@@ -27,9 +58,11 @@
   justify-content: space-between;
   align-items: space-between;
   flex-direction: column;
+  margin-left:130px;
 }
 
 .box {
+  
   color: white;
   display: flex;
   height: 32px;
