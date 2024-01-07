@@ -551,7 +551,7 @@ function updateNodes(id) {
 
 /***************************************************
   Traverses the node tree recursively 
-    and renders nodes
+    and renders nodes using pushMatrix()/push() and popMatrix()/pop() function
 ****************************************************/
 function traverse(id) {
   if (id == null) 
