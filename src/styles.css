@@ -116,9 +116,11 @@
 
 .partsBox {
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    align-content: flex-end;
+    flex-wrap: wrap;
 }
 
 .sliderValues {
@@ -251,7 +253,7 @@
 
 #UISliders {
   width: 750px;
-  height: 700px;
+  height: 800px;
   padding: 15px 15px 5px;
   position: absolute;
   text-align: center;
