@@ -372,17 +372,6 @@ function updateNodes(id) {
       figure[leftBackUpperLegId] = createNode(m, leftBackUpperLeg, rightFrontUpperLegId, leftBackLowerLegId);
       break;
 
-    // case leftLastUpperLegId:
-    //   m = translate(-0.1, -1.6, -0.5);
-    //   // m = mult(m, rotate(30, 1, 0, 0));
-    //   m = mult(m, translate(0.0, UPPER_LEG_HEIGHT/2, 0.0));
-    //   m = mult(m, rotate(-curTheta[leftLastUpperLegId], 0, 0, 1));
-    //   m = mult(m, translate(0.0, -UPPER_LEG_HEIGHT/2, 0.0));
-    //   // m = mult(m, rotate(-30, 1, 0, 0));
-    //   m = mult(m, translate(-1.0, 0.0, 0));
-    //   figure[leftLastUpperLegId] = createNode(m, leftLastUpperLeg, rightFrontUpperLegId, leftLastLowerLegId);
-    //   break;
-
     case rightFrontUpperLegId:
       m = translate(-1.1, -0.4, 0.5);
       // m = mult(m, rotate(-120, 1, 0, 0));
@@ -425,17 +414,6 @@ function updateNodes(id) {
       // m = mult(m, rotate(30, 1, 0, 0));
       figure[rightBackUpperLegId] = createNode(m, rightBackUpperLeg, null, rightBackLowerLegId);
       break;
-
-    // case rightLastUpperLegId:
-    //   m = translate(0.0, -0.8, 1.8);
-    //   // m = mult(m, rotate(-30, 1, 0, 0));
-    //   // m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-    //   m = mult(m, rotate(-curTheta[rightLastUpperLegId], 0, 0, 1));
-    //   // m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-    //   // m = mult(m, rotate(30, 1, 0, 0));
-    //   m = mult(m, translate(0.0, 0.8, -1.8));
-    //   figure[rightLastUpperLegId] = createNode(m, rightLastUpperLeg, null, rightLastLowerLegId);
-    //   break;
 
     case leftFrontLowerLegId:
       m = translate(0.2, 3.0, -5.8); // -y,z,-x
@@ -480,17 +458,6 @@ function updateNodes(id) {
       m = mult(m, translate(2.75, -3.0, 5.3));
       figure[leftBackLowerLegId] = createNode(m, leftBackLowerLeg, null, null);
       break;
-    
-    // case leftLastLowerLegId:
-    //   m = translate(-0.55, -2.2, -4.2);
-    //   // m = mult(m, rotate(30, 1, 0, 0));
-    //   // m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-    //   m = mult(m, rotate(-curTheta[leftLastLowerLegId], 0, 0, 1));
-    //   // m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-    //   // m = mult(m, rotate(-30, 1, 0, 0));
-    //   m = mult(m, translate(0.55, 2.2, 4.2));
-    //   figure[leftLastLowerLegId] = createNode(m, leftLastLowerLeg, null, null);
-    //   break;
 
     case rightFrontLowerLegId:
       m = translate(0.2, 3.0, 5.8);
@@ -535,17 +502,6 @@ function updateNodes(id) {
       m = mult(m, translate(2.75, -3.0, -5.3));
       figure[rightBackLowerLegId] = createNode(m, rightBackLowerLeg, null, null);
       break;
-    
-    // case rightLastLowerLegId:
-    //   m = translate(-0.55, -2.2, 4.2);
-    //   // m = mult(m, rotate(-60, 1, 0, 0));
-    //   // m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-    //   m = mult(m, rotate(-curTheta[rightLastLowerLegId], 0, 0, 1));
-    //   // m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-    //   // m = mult(m, rotate(60, 1, 0, 0));
-    //   m = mult(m, translate(0.55, 2.2, -4.2));
-    //   figure[rightLastLowerLegId] = createNode(m, rightLastLowerLeg, null, null);
-    //   break;
   }
 }
 
@@ -652,13 +608,6 @@ function rightLowerClaw() {
   drawBodyPart(CLAW_COLOR);
 }
 
-// function rear() {
-//   instanceMatrix = mult(modelViewMatrix, translate(-0.2, -BODY_HEIGHT, 0.0));
-//   instanceMatrix = mult(instanceMatrix, scale4(REAR_HEIGHT, REAR_LENGTH, REAR_WIDTH)); //height, length, width
-//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-//   drawBodyPart(REAR_COLOR);
-// }
-
 function leftFrontUpperLeg() {
   instanceMatrix = mult(modelViewMatrix, translate(0.5, 3.1, -2.4));
   instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
@@ -703,16 +652,6 @@ function leftBackUpperLeg() {
   drawBodyPart(BACK_LEG_COLOR);
 }
 
-// function leftLastUpperLeg() {
-//   instanceMatrix = mult(modelViewMatrix, translate(0.5, 3.1, -2.4));
-//   instanceMatrix = mult(instanceMatrix, rotate(30, 1, 0, 0));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, scale4(UPPER_LEG_WIDTH, UPPER_LEG_HEIGHT, UPPER_LEG_LENGTH));
-//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-//   drawBodyPart(BACK_LEG_COLOR);
-// }
 
 function rightFrontUpperLeg() {
   instanceMatrix = mult(modelViewMatrix, translate(0.5, 3.1, 2.4));
@@ -758,17 +697,6 @@ function rightBackUpperLeg() {
   drawBodyPart(BACK_LEG_COLOR);
 }
 
-// function rightLastUpperLeg() {
-//   instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, 1.8));
-//   instanceMatrix = mult(instanceMatrix, rotate(-30, 1, 0, 0));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, scale4(UPPER_LEG_WIDTH, UPPER_LEG_HEIGHT, UPPER_LEG_LENGTH));
-//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-//   drawBodyPart(BACK_LEG_COLOR);
-// }
-
 function leftFrontLowerLeg() {
   instanceMatrix = mult(modelViewMatrix, translate(-0.55, 4.3, -4.2)); //y, x, z
   instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
@@ -813,17 +741,6 @@ function leftBackLowerLeg() {
   drawBodyPart(BACK_LEG_COLOR);
 }
 
-// function leftLastLowerLeg() {
-//   instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, -4.2));
-//   instanceMatrix = mult(instanceMatrix, rotate(30, 1, 0, 0));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, scale4(LOWER_LEG_WIDTH, LOWER_LEG_HEIGHT, LOWER_LEG_LENGTH));
-//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-//   drawBodyPart(BACK_LEG_COLOR);
-// }
-
 function rightFrontLowerLeg() {
   instanceMatrix = mult(modelViewMatrix, translate(-0.55, 4.3, 4.2));
   instanceMatrix = mult(instanceMatrix, rotate(-120, 1, 0, 0));
@@ -867,19 +784,6 @@ function rightBackLowerLeg() {
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
   drawBodyPart(BACK_LEG_COLOR);
 }
-
-// function rightLastLowerLeg() {
-//   instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.2));
-//   instanceMatrix = mult(instanceMatrix, rotate(-30, 1, 0, 0));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
-//   // instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
-//   instanceMatrix = mult(instanceMatrix, scale4(LOWER_LEG_WIDTH, LOWER_LEG_HEIGHT, LOWER_LEG_LENGTH));
-//   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-//   drawBodyPart(BACK_LEG_COLOR);
-// }
-
-
 
 /***************************************************
   Draws body parts of figure (using cubes)  
@@ -935,13 +839,6 @@ function sliders() {
     theta[headId] = sliderValue;
     updateNodes(headId);
   };
-
-  // document.getElementById("sliderRear").oninput = function() {
-  //   var sliderValue = event.srcElement.value; 
-  //   document.getElementById("rearText").value = sliderValue;
-  //   theta[rearId] = sliderValue;
-  //   updateNodes(rearId);
-  // };
 
   document.getElementById("sliderLFU").oninput = function() {
     var sliderValue = event.srcElement.value; 
@@ -1068,20 +965,6 @@ function sliders() {
     theta[rightUpperClawId] = sliderValue;
     updateNodes(rightUpperClawId);
   };
-
-  // document.getElementById("sliderLMC").oninput = function() {
-  //   var sliderValue = event.srcElement.value; 
-  //   document.getElementById("LMCText").value = sliderValue;
-  //   theta[leftMiddleClawId] = sliderValue;
-  //   updateNodes(leftMiddleClawId);
-  // };
-
-  // document.getElementById("sliderRMC").oninput = function() {
-  //   var sliderValue = event.srcElement.value; 
-  //   document.getElementById("RMCText").value = sliderValue;
-  //   theta[rightMiddleClawId] = sliderValue;
-  //   updateNodes(rightMiddleClawId);
-  // };
 
   document.getElementById("sliderLLC").oninput = function() {
     var sliderValue = event.srcElement.value; 
