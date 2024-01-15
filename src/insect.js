@@ -1083,3 +1083,4 @@ function processBuffers(color, vertices, vSize) {
   gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
 }
+
