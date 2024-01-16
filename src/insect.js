@@ -15,7 +15,7 @@ var modelViewMatrixLoc;
 // Arrays for figure, stack of hierarchical model and vertices to draw
 var figure = [];  
 var stack = [];
-var vertices = [];
+var pointsArray = [];
 
 // Indices of body parts of spider figure
 var bodyId = 0;
@@ -162,7 +162,7 @@ window.onload = function init() {
 
   var vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
   // Associate out shader variables with our data buffer
   var vPosition = gl.getAttribLocation(program, "vPosition");
@@ -758,7 +758,7 @@ function rightBackLowerLeg() {
   Draws body parts of figure (using cubes)  
 ****************************************************/
 function drawBodyPart(color) {
-  processBuffers(color, vertices, 4);
+  processBuffers(color, pointsArray, 4);
   for(var i = 0; i < 6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4);
 }
 
@@ -982,10 +982,10 @@ function sliders() {
   Makes quadrilateral
 ****************************************************/
 function quad(a, b, c, d) {
-  vertices.push(cubeVertices[a]);
-  vertices.push(cubeVertices[b]);
-  vertices.push(cubeVertices[c]);
-  vertices.push(cubeVertices[d]);
+  pointsArray.push(cubeVertices[a]);
+  pointsArray.push(cubeVertices[b]);
+  pointsArray.push(cubeVertices[c]);
+  pointsArray.push(cubeVertices[d]);
 }
 
 /***************************************************
@@ -1017,7 +1017,7 @@ var cubeVertices = [
 /***************************************************
   Vertex buffers without colors
 ****************************************************/
-function processBuffers(vertices, vSize) {
+function processBuffers(pointsArray, vSize) {
   // Load the vertex data into the GPU
   
 }
@@ -1025,11 +1025,11 @@ function processBuffers(vertices, vSize) {
 /***************************************************
   Vertex buffers with colors (Overload)
 ****************************************************/
-function processBuffers(color, vertices, vSize) {
+function processBuffers(color, pointsArray, vSize) {
   var colors = [];
   
   // Create color array as much as vertices length
-  for(var i = 0; i < vertices.length; i++)
+  for(var i = 0; i < pointsArray.length; i++)
     colors.push(color);
 
   // Load the color data into the GPU
@@ -1045,7 +1045,7 @@ function processBuffers(color, vertices, vSize) {
   // Load the vertex data into the GPU
   var vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
   // Associate out shader variables with our data buffer
   var vPosition = gl.getAttribLocation(program, "vPosition");
