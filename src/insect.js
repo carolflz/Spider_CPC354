@@ -110,6 +110,19 @@ var timet;
 var timetLoc;
 var interpolationFrame = 0;
 
+// Material properties
+var materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
+var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
+var temp_matDiffuse;
+var temp_matAmbient;
+var temp_matSpecular;
+
+// Variables to vertex shader
+var ambientProduct, diffuseProduct, specularProduct;
+var ambientProductLoc, diffuseProductLoc, specularProductLoc;
+
 
 /***************************************************
   Init function of window
@@ -135,6 +148,7 @@ window.onload = function init() {
   translateY = 0;
   translateX = 0;
 
+  
   // Creating projection and model-view matrices
   projectionMatrix = perspective(90, 1, 0.02, 200);
   modelViewMatrix = lookAt(vec3(0, 4, -10), vec3(0, 1, 0), vec3(0, 1, 0));
@@ -146,13 +160,20 @@ window.onload = function init() {
   modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
 
+  var vBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+
+  // Associate out shader variables with our data buffer
+  var vPosition = gl.getAttribLocation(program, "vPosition");
+  gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vPosition);
+
   sliders();
   cube();
 
   for (i = 0; i < numNodes; i++) 
     updateNodes(i);
-
-  // drawGround();
   render();
 };
 
@@ -162,52 +183,7 @@ window.onload = function init() {
 ****************************************************/
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  // drawGround();
 
-  // if (isPlaying) {  // Animation
-  //   if (timet < 1) {
-  //     timet += 0.04;  // Speed of animation
-  //   } else {
-  //     interpolationFrame = (interpolationFrame + 1) % thetaList.length;
-  //     timet = 0;
-  //   }
-
-  //   var curFrame = interpolationFrame;
-  //   var nextFrame = (interpolationFrame + 1) % thetaList.length;
-
-  //   for (var i = 0; i < theta.length; i++) {
-  //     curTheta[i] = thetaList[curFrame][i] * (1 - timet) + thetaList[nextFrame][i] * timet;
-  //     updateNodes(i);
-  //   }
-
-  //   curTranslateX = transList[curFrame][0] * (1 - timet) + transList[nextFrame][0] * timet;
-  //   curTranslateY = transList[curFrame][1] * (1 - timet) + transList[nextFrame][1] * timet;
-  //   curTranslateZ = transList[curFrame][2] * (1 - timet) + transList[nextFrame][2] * timet;
-  //   updateNodes(bodyId);
-  // } 
-  
-  // else if(isPlayingDefaultAnim) {
-  //   if (timet < 1) {
-  //     timet += 0.04;  // Speed of animation
-  //   } else {
-  //     interpolationFrame = (interpolationFrame + 1) % defaultThetaList.length;
-  //     timet = 0;
-  //   }
-
-  //   var curFrame = interpolationFrame;
-  //   var nextFrame = (interpolationFrame + 1) % defaultThetaList.length;
-
-  //   for (var i = 0; i < theta.length; i++) {
-  //     curTheta[i] = defaultThetaList[curFrame][i] * (1 - timet) + defaultThetaList[nextFrame][i] * timet;
-  //     updateNodes(i);
-  //   }
-
-  //   curTranslateX = defaultTransList[curFrame][0] * (1 - timet) + defaultTransList[nextFrame][0] * timet;
-  //   curTranslateY = defaultTransList[curFrame][1] * (1 - timet) + defaultTransList[nextFrame][1] * timet;
-  //   curTranslateZ = defaultTransList[curFrame][2] * (1 - timet) + defaultTransList[nextFrame][2] * timet;
-  //   updateNodes(bodyId);
-  // }
-  // else {  // Static picture
   for (var i = 0; i < theta.length; i++) {
     curTheta[i] = theta[i];
     updateNodes(i);
@@ -216,7 +192,6 @@ function render() {
   curTranslateY = translateY;
   curTranslateZ = translateZ;
   updateNodes(bodyId);
-  // }
 
   traverse(bodyId);
   requestAnimFrame(render);
@@ -224,10 +199,6 @@ function render() {
 
 /***************************************************
   Creates new nodes with different parameters:
-    -transform matrix(transformation applied to the object)
-    -render function(render the object)
-    -sibling node(next object that is in the same hierarchy as the current object)
-    -child node(next object that is in the lower hierarchy than the current object)
 ****************************************************/
 function createNode(transform, render, sibling, child) {
   var node = {
@@ -240,8 +211,7 @@ function createNode(transform, render, sibling, child) {
 }
 
 /***************************************************
-  Node updates according to user chosen 
-    translation and rotation parameters
+  Node updates according to user chosen translation and rotation parameters
 ****************************************************/
 function updateNodes(id) {
   var m = mat4();
@@ -506,8 +476,7 @@ function updateNodes(id) {
 }
 
 /***************************************************
-  Traverses the node tree recursively 
-    and renders nodes using pushMatrix()/push() and popMatrix()/pop() function
+  Traverses the node tree recursively and renders nodes using pushMatrix()/push() and popMatrix()/pop() function
 ****************************************************/
 function traverse(id) {
   if (id == null) 
@@ -794,24 +763,6 @@ function drawBodyPart(color) {
 }
 
 /***************************************************
-  Draws the ground (using cubes)  
-****************************************************/
-function drawGround() {
-  var vertices = [
-    vec3(-64, -0.8, -32),
-    vec3(-64, -0.8, 32),
-    vec3(64, -0.8, 32),
-    vec3(64, -0.8, -32)
-  ];
-
-  instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
-  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-
-  processBuffers(vec4(46, 168, 34, 255), vertices, 3);
-  gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-}
-
-/***************************************************
   Custom scale function for mat4 type of matrices
 ****************************************************/
 function scale4(a, b, c) {
@@ -820,6 +771,13 @@ function scale4(a, b, c) {
   result[1][1] = b;
   result[2][2] = c;
   return result;
+}
+
+function convertHexToRGB(hex) {
+    var r = parseInt(hex.substring(1, 3), 16) / 255;
+    var g = parseInt(hex.substring(3, 5), 16) / 255;
+    var b = parseInt(hex.substring(5, 7), 16) / 255;
+    return vec4(r, g, b, 1.0); 
 }
 
 /***************************************************
@@ -1000,6 +958,24 @@ function sliders() {
     translateZ = sliderValue;
     updateNodes(bodyId);
   };
+
+  document.getElementById("materialDiffuse").oninput = function(){
+    temp_matDiffuse  = this.value
+    materialDiffuse  = convertHexToRGB(temp_matDiffuse);
+    diffuseProduct = mult(lightDiffuse, materialDiffuse);
+  };
+  
+  document.getElementById("materialAmbient").oninput = function(){
+    temp_matAmbient = this.value
+    materialAmbient = convertHexToRGB(temp_matAmbient);
+    ambientProduct = mult(lightAmbient, materialAmbient);
+  };
+
+  document.getElementById("materialSpecular").oninput = function(){
+    temp_matSpecular = this.value
+    materialSpecular = convertHexToRGB(temp_matSpecular);
+    specularProduct = mult(lightSpecular, materialSpecular);
+  }
 }
 
 /***************************************************
@@ -1043,14 +1019,7 @@ var cubeVertices = [
 ****************************************************/
 function processBuffers(vertices, vSize) {
   // Load the vertex data into the GPU
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
-
-  // Associate out shader variables with our data buffer
-  var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(vPosition);
+  
 }
 
 /***************************************************

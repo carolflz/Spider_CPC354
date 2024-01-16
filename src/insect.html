@@ -6,13 +6,13 @@
 
       attribute vec4 vPosition;
       attribute vec4 vColor;
+      attribute vec4 vNormal;
 
       varying vec4 fColor;
       varying lowp vec4 vPos;
 
       uniform mat4 modelViewMatrix;
       uniform mat4 projectionMatrix;
-      uniform float timet;
 
 
       void main() {
@@ -28,7 +28,6 @@
       varying lowp vec4 vPos;
       varying vec4 fColor;
 
-      uniform float timet;
 
       void main() {
         float sigmoid = 1.0 / (1.0 + exp(-0.2 * vPos.z));
@@ -76,6 +75,22 @@
 
         <label class="sliderLabel">Light Position Z:</label>
         <input type="range" min="-10" max="10" step="0.1" value="0" id="lightPosZSlider">
+      </div>
+    </div>
+
+    <div id="UITexture" class="UITextureBox">
+      <div id="UISlidersHeader">Material</div>
+      <br>
+      <div class="Material">
+        <input type="color" id="materialDiffuse" value="#B78585">
+        <label>Diffuse Material</label>
+        <br>
+        <input type="color" id="materialAmbient" value="#BE9D9D">
+        <label>Ambient Material</label>
+        <br>
+        <input type="color" id="materialSpecular" value="#EBE5E5">
+        <label>Specular Material</label>
+        <br>
       </div>
     </div>
 

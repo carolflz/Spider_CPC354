@@ -226,6 +226,17 @@
   height: 5px;
 }
 
+.UITextureBox{
+  border-radius: 25px;
+  background-color:#5cfd5c;
+  position:absolute;
+  top: 500px;
+  left: 650px;
+  padding: 40px;
+  margin: 10px;
+  width: 400px;
+}
+
 #UIButtons {
   width: 400px;
   height: 400px;
