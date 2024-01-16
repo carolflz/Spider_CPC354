@@ -20,10 +20,6 @@
   width: 400px;
 }
 
-#UISlidersHeader{
-  text-align: center;
-}
-
 /* Style for the sliders container */
 #lightMenu {
   margin-top: 20px;
@@ -226,11 +222,12 @@
   height: 5px;
 }
 
+
 .UITextureBox{
   border-radius: 25px;
   background-color:#5cfd5c;
   position:absolute;
-  top: 500px;
+  top: 440px;
   left: 650px;
   padding: 40px;
   margin: 10px;
@@ -280,6 +277,7 @@
   color: #da4444;
   font-size: 24px;
   font-weight: 700;
+  text-align: center;
 }
 
 #Textbox {
@@ -356,6 +354,29 @@
   background-color: #b62d2d;
   color: white;
 }
+
+#CoeMaterialHeader{
+  color: #020202;
+  text-align: center;
+  margin-top: 15px;
+  line-height: 20px;
+  margin-bottom: -0.1px;
+  font-size: 20px;
+  font-weight: 600;
+  padding-top: 5px;
+  padding-top: 20px;
+}
+
+#ShininessMaterial{
+  color: #020202;
+  margin-top: 15px;
+  line-height: 20px;
+  margin-bottom: -0.1px;
+  font-size: 20px;
+  font-weight: 600;
+  padding-top: 5px;
+}
+
 
 canvas {
   border: 22px #B5651D;
