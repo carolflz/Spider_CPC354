@@ -22,7 +22,8 @@
       uniform vec4 diffuseProduct;
       uniform vec4 specularProduct;
       uniform float shininess;
-      
+      uniform float Ka, Kd, Ks;
+
       void main() {
         fColor = vColor;
 
@@ -37,14 +38,14 @@
         vec3 H = normalize(L + E);
         vec4 ambient = ambientProduct;
 
-        float Kd = max(dot(L, N), 0.0);
-        vec4 diffuse = Kd * diffuseProduct;
+        float lambertian = max(dot(L, N), 0.0);
+        vec4 diffuse = lambertian * diffuseProduct;
 
-        float Ks = pow(max(dot(N, H), 0.0), shininess);
-        vec4 specular = Ks * specularProduct;
+        float specAngle = pow(max(dot(N, H), 0.0), shininess);
+        vec4 specular = specAngle * specularProduct;
 
         if (dot(L, N) < 0.0) specular = vec4(0.0, 0.0, 0.0, 1.0);
-        fColor = ambient + diffuse + specular;
+        fColor = Ka * ambient + Kd * diffuse + Ks * specular;
         fColor.a = 1.0;
         gl_Position = projectionMatrix * modelViewMatrix * vPosition;
       }
