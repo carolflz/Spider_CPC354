@@ -1,22 +1,26 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 *:focus {
     outline: none;
 }
 
-
+body{
+  margin-left:35px;
+  background-image:url(https://e0.pxfuel.com/wallpapers/296/617/desktop-wallpaper-most-beautiful-nature-on-of-for-laptop-scenic.jpg);
+  background-size:cover;
+}
 /* Style for the yellow UI box */
 .UIBoxYellow {
+  margin-left:45px;
   border-radius: 25px;
   background-color:#FDDD5C;
   position:absolute;
   top:10px;
   left: 650px;
   padding: 40px;
-  margin: 10px;
   width: 400px;
 }
 
@@ -74,7 +78,7 @@
   justify-content: space-between;
   align-items: space-between;
   flex-direction: column;
-  margin-left:520px;
+  margin-left:550px;
 }
 
 .box {
@@ -230,7 +234,7 @@
   top: 440px;
   left: 650px;
   padding: 40px;
-  margin: 10px;
+  margin-left: 45px;
   width: 400px;
 }
 
