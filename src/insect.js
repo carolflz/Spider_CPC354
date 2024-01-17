@@ -15,7 +15,7 @@ var modelViewMatrixLoc;
 // Arrays for figure, stack of hierarchical model and vertices to draw
 var figure = [];  
 var stack = [];
-var pointsArray = [];
+var vertices = [];
 
 // Indices of body parts of spider figure
 var bodyId = 0;
@@ -106,23 +106,70 @@ var loadedTransList = [];
 var defaultThetaList = [];
 var defaultTransList = [];
 
-var timet;
-var timetLoc;
-var interpolationFrame = 0;
+//Lighting
+var ambientProduct;
+var diffuseProduct;
+var specularProduct;
+let lightOn = true;
 
-// Material properties
-var materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
-var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
-var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+//Initialize lighting and shading
+var lightPosition = vec4(1.0, 1.0, 1.0, 1.0); // Position of the first light source
+var lightAmbient = vec4(0.5, 0.2, 0.2, 1.0);
+var lightDiffuse = vec4(1.0, 0.5, 1.0, 1.0);
+var lightSpecular = vec4(1.0, 0.5, 1.0, 1.0);
+
+//Material properties
+var materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
+var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
+var materialShininess = 10.0;
+
+var lightDiffusebp = vec4(1.0, 1.0, 1.0, 1.0);
+var lightAmbientbp = vec4(0.1, 1.0, 0.4, 1.0);
+var lightSpecularbp = vec4(1.0, 1.0, 1.0, 1.0);
 
 var temp_matDiffuse;
 var temp_matAmbient;
 var temp_matSpecular;
 
-// Variables to vertex shader
-var ambientProduct, diffuseProduct, specularProduct;
+// Variables used to link to vertex shader
+var lightPositionLoc;
 var ambientProductLoc, diffuseProductLoc, specularProductLoc;
+var shininessLoc;
+var ambientProduct;
+var diffuseProduct;
+var specularProduct;
 
+// Set the reflection coefficient for material ambient, diffuse, specular
+var Kd = 1.0;
+var Ka = 1.0;
+var Ks = 1.0;
+var KaLoc, KdLoc, KsLoc;
+
+function updateLightSource() {
+  // document.getElementById("light_diffuse").value;
+  // document.getElementById("light_ambient").value;
+  // document.getElementById("light_specular").value;
+
+  gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
+  
+  // Link to shininess of the material
+  shininessLoc = gl.getUniformLocation(program, "shininess");
+
+  // Link to coefficient of reflection
+  KaLoc = gl.getUniformLocation(program, "Ka");
+  KdLoc = gl.getUniformLocation(program, "Kd");
+  KsLoc = gl.getUniformLocation(program, "Ks");
+
+  render();
+}
+
+function convertHexToRGB(hex) {
+  var r = parseInt(hex.substring(1, 3), 16) / 255;
+  var g = parseInt(hex.substring(3, 5), 16) / 255;
+  var b = parseInt(hex.substring(5, 7), 16) / 255;
+  return vec4(r, g, b, 1.0); 
+}
 
 /***************************************************
   Init function of window
@@ -143,12 +190,10 @@ window.onload = function init() {
 
   // Initiating variables
   instanceMatrix = mat4();
-  timet = 0;
   translateZ = 0;
   translateY = 0;
   translateX = 0;
 
-  
   // Creating projection and model-view matrices
   projectionMatrix = perspective(90, 1, 0.02, 200);
   modelViewMatrix = lookAt(vec3(0, 4, -10), vec3(0, 1, 0), vec3(0, 1, 0));
@@ -159,21 +204,31 @@ window.onload = function init() {
   
   modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
-
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
-
-  // Associate out shader variables with our data buffer
-  var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(vPosition);
+  cube();
 
   sliders();
-  cube();
+
+  var vBuffer = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+
+  var vPosition = gl.getAttribLocation( program, "vPosition" );
+  gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( vPosition );
+
+  var cBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
+
+  var vColor = gl.getAttribLocation( program, "vColor" );
+  gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( vColor );
 
   for (i = 0; i < numNodes; i++) 
     updateNodes(i);
+
+  updateLightSource();
+  // drawGround();
   render();
 };
 
@@ -183,7 +238,16 @@ window.onload = function init() {
 ****************************************************/
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+  
+  gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(mult(lightAmbient, materialAmbient)));
+  gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(mult(lightDiffuse, materialDiffuse)));
+  gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(mult(lightSpecular, materialSpecular)));
+  gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
+  gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
+  gl.uniform1f(shininessLoc, materialShininess);
+  gl.uniform1f(KaLoc, Ka);
+  gl.uniform1f(KdLoc, Kd);
+  gl.uniform1f(KsLoc, Ks);
   for (var i = 0; i < theta.length; i++) {
     curTheta[i] = theta[i];
     updateNodes(i);
@@ -198,7 +262,7 @@ function render() {
 }
 
 /***************************************************
-  Creates new nodes with different parameters:
+  Creates new nodes with different parameters
 ****************************************************/
 function createNode(transform, render, sibling, child) {
   var node = {
@@ -211,7 +275,8 @@ function createNode(transform, render, sibling, child) {
 }
 
 /***************************************************
-  Node updates according to user chosen translation and rotation parameters
+  Node updates according to user chosen 
+    translation and rotation parameters
 ****************************************************/
 function updateNodes(id) {
   var m = mat4();
@@ -476,7 +541,8 @@ function updateNodes(id) {
 }
 
 /***************************************************
-  Traverses the node tree recursively and renders nodes using pushMatrix()/push() and popMatrix()/pop() function
+  Traverses the node tree recursively 
+    and renders nodes using pushMatrix()/push() and popMatrix()/pop() function
 ****************************************************/
 function traverse(id) {
   if (id == null) 
@@ -758,7 +824,7 @@ function rightBackLowerLeg() {
   Draws body parts of figure (using cubes)  
 ****************************************************/
 function drawBodyPart(color) {
-  processBuffers(color, pointsArray, 4);
+  processBuffers(color, vertices, 4);
   for(var i = 0; i < 6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4);
 }
 
@@ -771,13 +837,6 @@ function scale4(a, b, c) {
   result[1][1] = b;
   result[2][2] = c;
   return result;
-}
-
-function convertHexToRGB(hex) {
-    var r = parseInt(hex.substring(1, 3), 16) / 255;
-    var g = parseInt(hex.substring(3, 5), 16) / 255;
-    var b = parseInt(hex.substring(5, 7), 16) / 255;
-    return vec4(r, g, b, 1.0); 
 }
 
 /***************************************************
@@ -959,12 +1018,42 @@ function sliders() {
     updateNodes(bodyId);
   };
 
+  document.getElementById("diffuseSlider").oninput = function() {
+    var x = document.getElementById("diffuseSlider").value;
+    lightDiffuse = vec4(x, x, 0.1, 1.0);
+    lightDiffusebp = vec4(x, x, 0.1, 1.0);
+    diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    // diffuseProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
+    updateLightSource();
+  };
+
+  document.getElementById("ambientSlider").oninput = function() {
+    var x = document.getElementById("ambientSlider").value;
+    lightAmbient = vec4(x, x, 0.1, 1.0);
+    lightAmbientbp = vec4(x, x, 0.1, 1.0);
+    ambientProduct = mult(lightAmbient, materialAmbient);
+    ambientProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    updateLightSource();    
+  };
+
+  document.getElementById("specularSlider").oninput = function() {
+    var x = document.getElementById("specularSlider").value;
+    lightSpecular = vec4(x, x, 0.1, 1.0);
+    lightSpecularbp = vec4(x, x, 0.1, 1.0);
+    specularProduct = mult(lightSpecular, materialSpecular);
+    specularProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    updateLightSource();
+  };
+
   document.getElementById("materialDiffuse").oninput = function(){
     temp_matDiffuse  = this.value
     materialDiffuse  = convertHexToRGB(temp_matDiffuse);
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
   };
-  
+
   document.getElementById("materialAmbient").oninput = function(){
     temp_matAmbient = this.value
     materialAmbient = convertHexToRGB(temp_matAmbient);
@@ -975,17 +1064,47 @@ function sliders() {
     temp_matSpecular = this.value
     materialSpecular = convertHexToRGB(temp_matSpecular);
     specularProduct = mult(lightSpecular, materialSpecular);
-  }
+  };
+
+  document.getElementById("coeMDiffuse").oninput = function(){
+  Kd = this.value;
+  };
+
+  document.getElementById("coeMSpecular").oninput = function(){
+  Ka = this.value;
+  };
+
+  document.getElementById("coeMAmbient").oninput = function(){
+  Ks = this.value;
+  updateLightSource();
+  };
+
+// Update the shininess of the object
+  document.getElementById("materialShininess").oninput = function(){
+  materialShininess = this.value;
+  };
 }
 
+function convertHexToRGB(hex) {
+  var r = parseInt(hex.substring(1, 3), 16) / 255;
+  var g = parseInt(hex.substring(3, 5), 16) / 255;
+  var b = parseInt(hex.substring(5, 7), 16) / 255;
+  return vec4(r, g, b, 1.0); 
+}
+
+var colorsArray=[];
 /***************************************************
   Makes quadrilateral
 ****************************************************/
-function quad(a, b, c, d) {
-  pointsArray.push(cubeVertices[a]);
-  pointsArray.push(cubeVertices[b]);
-  pointsArray.push(cubeVertices[c]);
-  pointsArray.push(cubeVertices[d]);
+function quad(a, b, c, d, color) {
+  vertices.push(cubeVertices[a]);
+  vertices.push(cubeVertices[b]);
+  vertices.push(cubeVertices[c]);
+  vertices.push(cubeVertices[d]);
+
+  for(var i=0;i<4;i++){
+    colorsArray.push(color);
+ }
 }
 
 /***************************************************
@@ -1015,21 +1134,13 @@ var cubeVertices = [
 ];
 
 /***************************************************
-  Vertex buffers without colors
-****************************************************/
-function processBuffers(pointsArray, vSize) {
-  // Load the vertex data into the GPU
-  
-}
-
-/***************************************************
   Vertex buffers with colors (Overload)
 ****************************************************/
-function processBuffers(color, pointsArray, vSize) {
+function processBuffers(color, vertices, vSize) {
   var colors = [];
   
   // Create color array as much as vertices length
-  for(var i = 0; i < pointsArray.length; i++)
+  for(var i = 0; i < vertices.length; i++)
     colors.push(color);
 
   // Load the color data into the GPU
@@ -1045,7 +1156,7 @@ function processBuffers(color, pointsArray, vSize) {
   // Load the vertex data into the GPU
   var vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
 
   // Associate out shader variables with our data buffer
   var vPosition = gl.getAttribLocation(program, "vPosition");
