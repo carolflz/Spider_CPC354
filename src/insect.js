@@ -1066,6 +1066,21 @@ function sliders() {
     specularProduct = mult(lightSpecular, materialSpecular);
   };
 
+  document.getElementById("lightPosXSlider").oninput = function() {
+    lightPosition[0] = parseFloat(this.value);
+    updateLightSource();
+  };
+  
+  document.getElementById("lightPosYSlider").oninput = function() {
+      lightPosition[1] = parseFloat(this.value);
+      updateLightSource();
+  };
+  
+  document.getElementById("lightPosZSlider").oninput  = function() {
+      lightPosition[2] = parseFloat(this.value);
+      updateLightSource();
+  };
+
   document.getElementById("coeMDiffuse").oninput = function(){
   Kd = this.value;
   };
