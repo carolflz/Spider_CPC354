@@ -106,14 +106,19 @@ var loadedTransList = [];
 var defaultThetaList = [];
 var defaultTransList = [];
 
+const at = vec3(0.0, 0.0, 0.0);
+const up = vec3(0.0, 1.0, 0.0);
+
 //Lighting
 var ambientProduct;
 var diffuseProduct;
 var specularProduct;
-let lightOn = true;
+// light status 
+//to determine how to calculate lighting or shading for different types of light sources
+var isDirectional = false; 
 
 //Initialize lighting and shading
-var lightPosition = vec4(1.0, 1.0, 1.0, 1.0); // Position of the first light source
+var lightPosition = vec4(1.0, 1.0, 1.0, 1.0);
 var lightAmbient = vec4(0.5, 0.2, 0.2, 1.0);
 var lightDiffuse = vec4(1.0, 0.5, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 0.5, 1.0, 1.0);
@@ -146,10 +151,30 @@ var Ka = 1.0;
 var Ks = 1.0;
 var KaLoc, KdLoc, KsLoc;
 
+// Define the position of the camera (viewer's eye) in 3D space
+var eye = vec3(1.0, 1.0, 1.0);
+
+var radius = 4.0;
+var far = 3.0;
+var phi = 0.0;
+var near = 0.3;
+var dr = 5.0 * Math.PI/180.0;
+var thetaCam = 0.0;
+var  aspect;   
+var  fovy = 45.0;  
+var numNodes = 16;
+var numAngles = 11;
+var angle = 0;
+var pointsArray = [];
+
 function updateLightSource() {
-  // document.getElementById("light_diffuse").value;
-  // document.getElementById("light_ambient").value;
-  // document.getElementById("light_specular").value;
+  if (isDirectional) {
+    // Set up directional light properties
+    gl.uniform3fv(lightPositionLoc, vec3(1.0, 1.0, 1.0));
+} else {
+    // Set up point light properties
+    gl.uniform3fv(lightPositionLoc, vec3(0.0, 0.0, 1.0));
+}
 
   gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
   
@@ -236,7 +261,7 @@ window.onload = function init() {
   Render Function which includes animation and
     static picture of spider figure  
 ****************************************************/
-function render() {
+var render = function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
   gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(mult(lightAmbient, materialAmbient)));
@@ -252,13 +277,43 @@ function render() {
     curTheta[i] = theta[i];
     updateNodes(i);
   }
+  
   curTranslateX = translateX;
   curTranslateY = translateY;
   curTranslateZ = translateZ;
   updateNodes(bodyId);
 
-  traverse(bodyId);
+
+traverse(bodyId);
+  projectionMatrix = perspective(fovy, aspect, near, far);
+    
+  var isDirectionalLoc = gl.getUniformLocation(program, "isDirectional");
+  gl.uniform1i(isDirectionalLoc, isDirectional ? 1 : 0);
+  
   requestAnimFrame(render);
+}
+
+function changeCamera() {
+  eye[0] = radius*Math.sin(thetaCam)*Math.cos(phi);
+  eye[1] = radius*Math.sin(thetaCam)*Math.sin(phi);
+  eye[2] = radius*Math.cos(thetaCam);
+  modelViewMatrix = lookAt(eye, at, up);
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+  render();
+}
+
+function changeCameraPosition() {
+  modelViewMatrix = lookAt(eye, at, up);
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+  render();
+}
+
+function scale4(a, b, c) {
+  var result = mat4();
+  result[0][0] = a;
+  result[1][1] = b;
+  result[2][2] = c;
+  return result;
 }
 
 /***************************************************
@@ -1081,6 +1136,21 @@ function sliders() {
       updateLightSource();
   };
 
+  // Distance and point light
+  document.getElementById("btn_toggle_position").addEventListener("click", function() {
+    isDirectional = !isDirectional;
+
+    // Update button text
+    this.textContent = isDirectional ? "Change to Point Light" : "Change to Directional Light";
+
+    // Update the light source properties
+    updateLightSource();
+
+    // Render the scene
+    render();
+});
+
+  
   document.getElementById("coeMDiffuse").oninput = function(){
   Kd = this.value;
   };
@@ -1098,6 +1168,8 @@ function sliders() {
   document.getElementById("materialShininess").oninput = function(){
   materialShininess = this.value;
   };
+
+  
 }
 
 function convertHexToRGB(hex) {
@@ -1177,5 +1249,15 @@ function processBuffers(color, vertices, vSize) {
   var vPosition = gl.getAttribLocation(program, "vPosition");
   gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
+  cBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
+
+  var vColor = gl.getAttribLocation( program, "vColor" );
+  gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( vColor );
+  
 }
+
+
 
