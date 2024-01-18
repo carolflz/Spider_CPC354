@@ -35,39 +35,49 @@
       uniform vec4 diffuseProduct;
       uniform vec4 specularProduct;
       uniform float shininess;
-      uniform float Ka, Kd, Ks;
+      // Coefficient for ambient component, diffuse component and specular component
+      // Used to adjust intensity of these 3 components
+      uniform float Ka;
+      uniform float Kd;
+      uniform float Ks;
 
       void main() {
+        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+        vPos = gl_Position;
+  
+        float sigmoid = 1.0 / (1.0 + exp(-0.2 * vPos.z));
+        vec4 vColor = vColor * sigmoid * 0.8 / 255.0 + 0.1;
+
         fColor = vColor;
 
         //Lighting
         vec3 pos = -(modelViewMatrix * vPosition).xyz;
         if (isDirectional == 1) {
           L = normalize(-lightPosition.xyz);
-      } else {
+        } else {
           L = normalize(lightPosition.xyz - pos); 
-      }
+        }
 
         vec3 light = lightPosition.xyz;
         
         vec3 L = normalize(light - pos);
-         E = -pos;
+        E = -pos;
         vec3 N = normalize((modelViewMatrix * vNormal).xyz);
 
-        // Diffrent diffuseProduct, specularProduct, shininess, etc;
+        // Different diffuseProduct, specularProduct, shininess, etc;
         vec3 H = normalize(L + E);
-        vec4 ambient = ambientProduct;
+        vec4 ambient = vColor * ambientProduct;
         vec3 H2 = normalize(L2 + E);
         float lambertian = max(dot(L, N), 0.0);
-        vec4 diffuse = lambertian * diffuseProduct;
+        vec4 diffuse = vColor * lambertian * diffuseProduct;
 
         float specAngle = pow(max(dot(N, H), 0.0), shininess);
-        vec4 specular = specAngle * specularProduct;
+        vec4 specular = vColor * specAngle * specularProduct;
 
         if (dot(L, N) < 0.0) specular = vec4(0.0, 0.0, 0.0, 1.0);
         fColor = Ka * ambient + Kd * diffuse + Ks * specular;
         fColor.a = 1.0;
-        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+        
         
       }
     </script>

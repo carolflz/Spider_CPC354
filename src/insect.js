@@ -227,31 +227,31 @@ window.onload = function init() {
   
   modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
+  
   cube();
 
   sliders();
 
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+  // var vBuffer = gl.createBuffer();
+  // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+  // gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
 
-  var vPosition = gl.getAttribLocation( program, "vPosition" );
-  gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vPosition );
+  // var vPosition = gl.getAttribLocation( program, "vPosition" );
+  // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( vPosition );
 
-  var cBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
+  // var cBuffer = gl.createBuffer();
+  // gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  // gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
 
-  var vColor = gl.getAttribLocation( program, "vColor" );
-  gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vColor );
+  // var vColor = gl.getAttribLocation( program, "vColor" );
+  // gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( vColor );
 
   for (i = 0; i < numNodes; i++) 
     updateNodes(i);
 
   updateLightSource();
-  // drawGround();
   attachEventListeners();
   render();
 };
@@ -377,22 +377,22 @@ function updateNodes(id) {
   
     case leftMiddleClawId:
       m = translate(0.2, 1.2, -2.0); // -y,z,-x
-      m = mult(m, rotate(-80, 1, 0, 0));
-      m = mult(m, translate(0.0, 3.0, 0.0));
+      // m = mult(m, rotate(-200, 1, 0, 0));
+      // m = mult(m, translate(0.0, 3.0, 0.0));
       // m = mult(m, rotate(-curTheta[leftMiddleClawId], 1, 0, 0));
-      m = mult(m, translate(0.0, -3.0, 0.0));
-      m = mult(m, rotate(80, 1, 0, 0));
+      // m = mult(m, translate(0.0, -3.0, 0.0));
+      // m = mult(m, rotate(200, 1, 0, 0));
       // m = mult(m, translate(-1.0, 0.0, 0));
       figure[leftMiddleClawId] = createNode(m, leftMiddleClaw, null, leftLowerClawId);
       break;
 
     case rightMiddleClawId:
       m = translate(0.2, 1.2, 2.0); // -y,z,-x
-      m = mult(m, rotate(120, 1, 0, 0));
-      m = mult(m, translate(0.0, 3.0, 0.0));
+      // m = mult(m, rotate(120, 1, 0, 0));
+      // m = mult(m, translate(0.0, 3.0, 0.0));
       // m = mult(m, rotate(-curTheta[rightMiddleClawId], 0, 0, 1));
-      m = mult(m, translate(0.0, -3.0, 0.0));
-      m = mult(m, rotate(-120, 1, 0, 0));
+      // m = mult(m, translate(0.0, -3.0, 0.0));
+      // m = mult(m, rotate(-120, 1, 0, 0));
       // m = mult(m, translate(-1.0, 0.0, 0));
       figure[rightMiddleClawId] = createNode(m, rightMiddleClaw, null, rightLowerClawId);
       break;
@@ -1087,7 +1087,7 @@ function sliders() {
     lightAmbient = vec4(x, x, 0.1, 1.0);
     lightAmbientbp = vec4(x, x, 0.1, 1.0);
     ambientProduct = mult(lightAmbient, materialAmbient);
-    ambientProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    // ambientProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
     updateLightSource();    
   };
@@ -1097,7 +1097,7 @@ function sliders() {
     lightSpecular = vec4(x, x, 0.1, 1.0);
     lightSpecularbp = vec4(x, x, 0.1, 1.0);
     specularProduct = mult(lightSpecular, materialSpecular);
-    specularProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    // specularProductLoc = gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
     updateLightSource();
   };
@@ -1178,19 +1178,19 @@ function convertHexToRGB(hex) {
   return vec4(r, g, b, 1.0); 
 }
 
-var colorsArray=[];
+// var colorsArray=[];
 /***************************************************
   Makes quadrilateral
 ****************************************************/
-function quad(a, b, c, d, color) {
+function quad(a, b, c, d) {
   vertices.push(cubeVertices[a]);
   vertices.push(cubeVertices[b]);
   vertices.push(cubeVertices[c]);
   vertices.push(cubeVertices[d]);
 
-  for(var i=0;i<4;i++){
-    colorsArray.push(color);
- }
+//   for(var i=0;i<4;i++){
+//     colorsArray.push(color);
+//  }
 }
 
 /***************************************************
@@ -1220,7 +1220,7 @@ var cubeVertices = [
 ];
 
 /***************************************************
-  Vertex buffers with colors (Overload)
+  Vertex buffers with colors
 ****************************************************/
 function processBuffers(color, vertices, vSize) {
   var colors = [];
@@ -1248,13 +1248,13 @@ function processBuffers(color, vertices, vSize) {
   var vPosition = gl.getAttribLocation(program, "vPosition");
   gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
-  cBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
+  // cBuffer = gl.createBuffer();
+  // gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  // gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
 
-  var vColor = gl.getAttribLocation( program, "vColor" );
-  gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vColor );
+  // var vColor = gl.getAttribLocation( program, "vColor" );
+  // gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( vColor );
   
 }
 
