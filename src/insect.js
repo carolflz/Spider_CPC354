@@ -115,7 +115,7 @@ var diffuseProduct;
 var specularProduct;
 // light status 
 //to determine how to calculate lighting or shading for different types of light sources
-var isDirectional = false; 
+var isDirectional = true; 
 
 //Initialize lighting and shading
 var lightPosition = vec4(1.0, 1.0, 1.0, 1.0);
@@ -1139,7 +1139,7 @@ function sliders() {
   // Distance and point light
   document.getElementById("btn_toggle_position").addEventListener("click", function() {
     isDirectional = !isDirectional;
-
+    lightPosition[3] = isDirectional ? 0.0 : 1.0;
     // Update button text
     this.textContent = isDirectional ? "Change to Point Light" : "Change to Directional Light";
 
