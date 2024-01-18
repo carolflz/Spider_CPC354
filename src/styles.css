@@ -24,6 +24,23 @@ body{
   width: 400px;
 }
 
+.UIBoxBlue {
+  border-radius: 25px;
+  background-color:#85e7e6;
+  position:relative;
+  z-index: 2;
+  top:1px;
+  bottom: 20px;
+  padding: 20px;
+  margin: 10px;
+  left: 30px;
+  width: 500px;
+}
+
+#UISlidersHeader{
+  text-align: center;
+}
+
 /* Style for the sliders container */
 #lightMenu {
   margin-top: 20px;

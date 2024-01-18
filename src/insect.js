@@ -163,6 +163,8 @@ var numAngles = 11;
 var angle = 0;
 var pointsArray = [];
 
+var currentProgram;
+
 function updateLightSource() {
   if (isDirectional) {
     // Set up directional light properties
@@ -250,6 +252,7 @@ window.onload = function init() {
 
   updateLightSource();
   // drawGround();
+  attachEventListeners();
   render();
 };
 
@@ -1255,5 +1258,73 @@ function processBuffers(color, vertices, vSize) {
   
 }
 
+/***************************************************
+  Changing the location and orientation of the camera via LookAt function.
+****************************************************/
+function attachEventListeners() {
+  document.getElementById("cameraXSlider").addEventListener("input", function () {
+    var sliderValue = parseFloat(this.value);
+    eye[0] = sliderValue;
+    updateCamera();
+  });
 
+  document.getElementById("cameraYSlider").addEventListener("input", function () {
+    var sliderValue = parseFloat(this.value);
+    eye[1] = sliderValue;
+    updateCamera();
+  });
 
+  document.getElementById("cameraZSlider").addEventListener("input", function () {
+    var sliderValue = parseFloat(this.value);
+    eye[2] = sliderValue;
+    updateCamera();
+  });
+
+  document.getElementById("flatShaderBtn").onclick = function() {
+    switchShader("vertex-shader-flat", "fragment-shader-flat");
+  };
+
+  document.getElementById("phongShaderBtn").onclick = function() {
+    switchShader("vertex-shader-smooth", "fragment-shader-smooth");
+  };
+
+  document.getElementById("defaultShaderBtn").onclick = function() {
+    switchShader("vertex-shader", "fragment-shader");
+  };
+}
+
+function updateCamera() {
+  modelViewMatrix = lookAt(eye, at, up);
+  gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelViewMatrix"), false, flatten(modelViewMatrix));
+  render();
+}
+
+// function switchShader(vertexShaderId, fragmentShaderId) {
+//   var newProgram = initShaders(gl, vertexShaderId, fragmentShaderId);
+//   gl.useProgram(newProgram);
+//   currentProgram = newProgram;
+
+//   var vBuffer = gl.createBuffer();
+//   gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+//   gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+
+//   var vPosition = gl.getAttribLocation( program, "vPosition" );
+//   gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+//   gl.enableVertexAttribArray( vPosition );
+
+//   var cBuffer = gl.createBuffer();
+//   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+//   gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
+
+//   var vColor = gl.getAttribLocation( program, "vColor" );
+//   gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+//   gl.enableVertexAttribArray( vColor );
+
+//   for (i = 0; i < numNodes; i++) 
+//     updateNodes(i);
+
+//   updateLightSource();
+//   // drawGround();
+//   attachEventListeners();
+//   render();
+// }

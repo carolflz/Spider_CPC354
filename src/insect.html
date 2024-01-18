@@ -85,6 +85,89 @@
       }
     </script>
 
+    <!-- Flat Shading Vertex Shader -->
+    <script id="vertex-shader-flat" type="x-shader/x-vertex">
+      attribute vec4 aPos;
+      attribute vec3 aNormal;
+      
+      uniform mat4 uModel;
+      uniform mat4 uInvModel;
+      uniform mat4 uProjectionView;
+      
+      varying vec3 vFragPos;
+      varying vec3 vNormal;
+      
+      void main() {
+          vFragPos = vec3(uModel * aPos);
+          vNormal = mat3(uInvModel) * aNormal;
+          gl_Position = uProjectionView * vec4(vFragPos, 1.0);
+      }      
+  </script>
+
+  <!-- Flat Shading Fragment Shader -->
+  <script id="fragment-shader-flat" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec3 vFragPos;
+    varying vec3 vNormal;
+    
+    uniform vec3 uViewPos;
+    uniform vec3 uLightPos;
+    uniform vec3 uLightColor;
+    
+    void main() {
+        // Ambient
+        vec3 ambientColor = vec3(0.1) * uLightColor;
+    
+        // Diffuse
+        vec3 norm = normalize(vNormal);
+        vec3 lightDir = normalize(uLightPos - vFragPos);
+        float diff = max(dot(norm, lightDir), 0.0);
+        vec3 diffuseColor = diff * uLightColor;
+    
+        vec4 color = vec4(ambientColor + diffuseColor, 1.0);
+        gl_FragColor = color;
+    }    
+  </script>
+
+  <!-- Phong Shading Vertex Shader -->
+  <script id="vertex-shader-smooth" type="x-shader/x-vertex">
+    precision mediump float;
+
+    varying vec3 vFragPos;
+    varying vec3 vNormal;
+    
+    uniform vec3 uViewPos;
+    uniform vec3 uLightPos;
+    uniform vec3 uLightColor;
+    
+    void main() {
+        // Material properties
+        vec3 ambientMaterial = vec3(0.2, 0.5, 1.0);
+        vec3 diffuseMaterial = vec3(0.2, 0.5, 1.0);
+        vec3 specularMaterial = vec3(0.5);
+        float shininess = 32.0;
+    
+        // Ambient
+        vec3 ambient = 0.1 * uLightColor * ambientMaterial;
+    
+        // Diffuse
+        vec3 norm = normalize(vNormal);
+        vec3 lightDir = normalize(uLightPos - vFragPos);
+        float diff = max(dot(norm, lightDir), 0.0);
+        vec3 diffuse = uLightColor * (diff * diffuseMaterial);
+    
+        // Specular
+        vec3 viewDir = normalize(uViewPos - vFragPos);
+        vec3 reflectDir = reflect(-lightDir, norm);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+        vec3 specular = uLightColor * (spec * specularMaterial);
+    
+        vec4 color = vec4(ambient + diffuse + specular, 1.0);
+        gl_FragColor = color;
+    }    
+  </script> 
+
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/initShaders.js"></script>
@@ -126,9 +209,46 @@
         <input type="range" min="-10" max="10" step="0.1" value="5" id="lightPosYSlider">
 
         <label class="sliderLabel">Light Position Z:</label>
-        <input type="range" min="-10" max="10" step="0.1" value="0" id="lightPosZSlider">
+        <input
+          type="range"
+          min="-10"
+          max="10"
+          step="0.1"
+          value="0"
+          id="lightPosZSlider"
+        />
+
       </div>
     </div>
+
+    <div id="UISlider" class="UIBoxBlue">
+      <div id="UISlidersHeader">Viewing & Shading</div>
+      <div id="CameraMenu">
+        <div class="cameraXSlider">
+          <br>
+          <label for="cameraXSlider" class="title">X-axis Camera</label>
+          <br>
+          <input type="range" id="cameraXSlider" class="control_silder" min="-20" max="20" step="0.1" value="10" />
+      </div>
+      
+      <div class="cameraYSlider">
+          <label for="cameraYSlider" class="title">Y-axis Camera</label>
+          <br>
+          <input type="range" id="cameraYSlider" class="control_silder" min="-20" max="20" step="0.1" value="10" />
+      </div>
+      
+      <div class="cameraZSlider">
+          <label for="cameraZSlider" class="title">Z-axis Camera</label>
+          <br>
+          <input type="range" id="cameraZSlider" class="control_silder" min="-20" max="20" step="0.1" value="10" />
+      </div>
+
+      <button id="defaultShaderBtn">Default Shading</button>
+      <button id="flatShaderBtn">Flat Shading</button>
+      <button id="phongShaderBtn">Smooth Shading</button>
+
+      </div>
+    </div>    
 
     <div id="UITexture" class="UITextureBox">
       <div id="UISlidersHeader">Material</div>
