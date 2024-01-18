@@ -1140,14 +1140,15 @@ function sliders() {
   document.getElementById("btn_toggle_position").addEventListener("click", function() {
     isDirectional = !isDirectional;
 
-
-    lightPosition[3] = isDirectional ? 0.0 : 1.0; 
+    // Update button text
     this.textContent = isDirectional ? "Change to Point Light" : "Change to Directional Light";
-    
+
+    // Update the light source properties
     updateLightSource();
+
+    // Render the scene
     render();
 });
-
 
   
   document.getElementById("coeMDiffuse").oninput = function(){
@@ -1255,14 +1256,7 @@ function processBuffers(color, vertices, vSize) {
   var vColor = gl.getAttribLocation( program, "vColor" );
   gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( vColor );
-  var isDirectionalLoc = gl.getUniformLocation(program, "isDirectional");
-  gl.uniform1i(isDirectionalLoc, isDirectional ? 1 : 0);
   
-
-
-  // gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
-  
-  requestAnimFrame(render);
 }
 
 
