@@ -118,20 +118,16 @@ var specularProduct;
 var isDirectional = true; 
 
 //Initialize lighting and shading
-var lightPosition = vec4(1.0, 1.0, 1.0, 1.0);
-var lightAmbient = vec4(0.5, 0.2, 0.2, 1.0);
-var lightDiffuse = vec4(1.0, 0.5, 1.0, 1.0);
-var lightSpecular = vec4(1.0, 0.5, 1.0, 1.0);
+var lightPosition = vec4(1.0, 2.0, 3.0, 1.0);
+var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
 //Material properties
 var materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
 var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
 var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
-var materialShininess = 10.0;
-
-var lightDiffusebp = vec4(1.0, 1.0, 1.0, 1.0);
-var lightAmbientbp = vec4(0.1, 1.0, 0.4, 1.0);
-var lightSpecularbp = vec4(1.0, 1.0, 1.0, 1.0);
+var materialShininess = 100.0;
 
 var temp_matDiffuse;
 var temp_matAmbient;
