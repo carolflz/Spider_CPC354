@@ -31,7 +31,7 @@ body{
   z-index: 2;
   top:1px;
   bottom: 20px;
-  padding: 20px;
+  padding: 18px;
   margin: 10px;
   left: 30px;
   width: 500px;
@@ -403,4 +403,5 @@ body{
 canvas {
   border: 22px #B5651D;
   border-style: groove;
+  margin-top: -50px;
 }
