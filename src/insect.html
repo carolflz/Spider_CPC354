@@ -4,7 +4,7 @@
     <title>CPC354 Assignment 2</title>
 
     <body>
-        <h1 style="color: white; text-align: center;">CPC354 Assignment 2</h1>
+
     
       </body>
     <script id="vertex-shader" type="x-shader/x-vertex">
@@ -23,8 +23,8 @@
       attribute vec4 vNormal;
 
       varying vec4 color; // Color from the lighting calculations
-      varying vec4 fColor;
-      varying lowp vec4 vPos;
+      varying vec4 fColor; // Color passed to fragment shader
+      varying lowp vec4 vPos; 
 
       uniform mat4 modelViewMatrix;
       uniform mat4 projectionMatrix;
@@ -192,7 +192,6 @@
     <canvas id="gl-canvas" width="600" height="600" name="canvas">
       Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
-
     <div id="UISlider" class="UIBoxYellow">
       <div id="UISlidersHeader">Light Source</div>
       <div id="lightMenu">
@@ -232,6 +231,7 @@
     </div>
 
     <div id="UISlider" class="UIBoxBlue">
+      <br>
       <div id="UISlidersHeader">Viewing & Shading</div>
       <div id="CameraMenu">
         <div class="cameraXSlider">
@@ -297,6 +297,7 @@
     </div>
 
     <div id="UISliders" class="UIBoxRed">
+      <br>
       <div id="UISlidersHeader">Sliders</div>
       <div class="break5"></div>
 
@@ -347,23 +348,24 @@
                 20
               </div>
             </div>
-            <br>
+          </div>
+          <div class="titledDiv">
             <h1><span>Front</span></h1>
             <div class="box">
               <div class="textDiv">Upper:</div>
               <input type="text" id="LFUText" class="sliderValues" value="0" disabled>
               <div class="numberDiv">
-                -50
-                <input id="sliderLFU" type="range" min="-50" max="30" step="2" value="0">
-                30
+                -20
+                <input id="sliderLFU" type="range" min="-20" max="20" step="1" value="0">
+                20
               </div>
             </div>
             <div class="box">
               <div class="textDiv">Lower:</div>
               <input type="text" id="LFLText" class="sliderValues" value="0" disabled>
               <div class="numberDiv">
-                -60
-                <input id="sliderLFL" type="range" min="-60" max="30" step="2" value="0">
+                -30
+                <input id="sliderLFL" type="range" min="-30" max="30" step="2" value="0">
                 30
               </div>
             </div>
@@ -394,7 +396,6 @@
               </div>
             </div>
           </div>
-          <div class="break5"></div>
           <div class="titledDiv">
             <h1><span>Center 2</span></h1>
             <div class="box">
@@ -470,24 +471,24 @@
                 20
               </div>
             </div>
-          <div class="break15"></div>
+          </div>
           <div class="titledDiv">
             <h1><span>Front</span></h1>
             <div class="box">
               <div class="textDiv">Upper:</div>
               <input type="text" id="RFUText" class="sliderValues" value="0" disabled>
               <div class="numberDiv">
-                -60
-                <input id="sliderRFU" type="range" min="-60" max="30" step="2" value="0">
-                30
+                -20
+                <input id="sliderRFU" type="range" min="-20" max="20" step="2" value="0">
+                20
               </div>
             </div>
             <div class="box">
               <div class="textDiv">Lower:</div>
               <input type="text" id="RFLText" class="sliderValues" value="0" disabled>
               <div class="numberDiv">
-                -60
-                <input id="sliderRFL" type="range" min="-60" max="30" step="2" value="0">
+                -30
+                <input id="sliderRFL" type="range" min="-30" max="30" step="2" value="0">
                 30
               </div>
             </div>
@@ -569,7 +570,7 @@
       </div>
       <div class="partsBox">
         <div class="titledDiv">
-          <h1><span>Translate</span></h1>
+          <h1><span>Movement</span></h1>
           <div class="box">
             <div class="textDiv">Translate X:</div>
             <input type="text" id="XText" class="sliderValues" value="0" disabled>
@@ -584,9 +585,9 @@
             <div class="textDiv">Translate Y:</div>
             <input type="text" id="YText" class="sliderValues" value="0" disabled>
             <div class="numberDiv">
-              0
-              <input id="sliderY" type="range" min="0" max="8" step="0.1" value="0">
-              8
+              -6
+              <input id="sliderY" type="range" min="-6" max="6" step="0.1" value="0">
+              6
             </div>
           </div>
           <div class="break5"></div>
