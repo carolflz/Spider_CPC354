@@ -14,6 +14,7 @@ body{
 }
 /* Style for the yellow UI box */
 .UIBoxYellow {
+  box-shadow: -8px 8px 8px #8360604d;
   margin-left:45px;
   border-radius: 25px;
   background-color:#FDDD5C;
@@ -25,6 +26,7 @@ body{
 }
 
 .UIBoxBlue {
+  box-shadow: -8px 8px 8px #8360604d;
   border-radius: 25px;
   background-color:#85e7e6;
   position:relative;
@@ -92,7 +94,7 @@ body{
   background-color: #da4444;
   box-shadow: -8px 8px 8px #8360604d;
   display: flex;
-  border:none;
+  border: none;
   justify-content: space-between;
   align-items: space-between;
   flex-direction: column;

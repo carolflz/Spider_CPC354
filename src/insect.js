@@ -395,7 +395,7 @@ function updateNodes(id) {
       m = mult(m, rotate(-90, 1, 0, 0));
       m = mult(m, translate(0.0, 4.3, 0.0));
       m = mult(m, rotate(-curTheta[leftLowerClawId], 0, 0, 1));
-      m = mult(m, translate(0.0, -4.3, 0.0));
+      m = mult(m, translate(0.0, -4.3, 0.0)); // perform rotation around a fixed point other than origin
       m = mult(m, rotate(90, 1, 0, 0));
       figure[leftLowerClawId] = createNode(m, leftLowerClaw, null, null);
       break;
